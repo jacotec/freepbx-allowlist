@@ -305,21 +305,19 @@ class Allowlist implements BMO
         $ext->add($id, $c, '', new \ext_gosubif('$[${DIALPLAN_EXISTS(app-allowlist-check-predial-hook,s,1)}]', 'app-allowlist-check-predial-hook,s,1'));
         $ext->add($id, $c, '', new \ext_gotoif('$["${callerallowed}"="1"]', 'returnto'));
 
-	// check pause time and exit if pause is enabled
+	    // check pause time and exit if pause is enabled
         $ext->add($id, $c, '', new \ext_gosub('app-allowlist-pause-check,s,1'));
-	$ext->add($id, $c, '', new \ext_gotoif('$["${DB_EXISTS(allowlist/pause)}"="1"]', 'returnto'));
+	    $ext->add($id, $c, '', new \ext_gotoif('$["${DB_EXISTS(allowlist/pause)}"="1"]', 'returnto'));
 
-        $ext->add($id, $c, 'check-list', new \ext_gotoif('$["${DB_EXISTS(allowlist/${CALLERID(num)})}"="0"]', 'check-contacts'));
-        $ext->add($id, $c, '', new \ext_setvar('CALLED_ALLOWLIST', '1'));
-        $ext->add($id, $c, '', new \ext_return(''));
+        $ext->add($id, $c, 'check-list', new \ext_gotoif('$["${DB_EXISTS(allowlist/${CALLERID(num)})}"="0"]', 'check-contacts', 'allowlisted'));
 
-        $ext->add($id, $c, 'check-contacts', new \ext_gotoif('$["${DB_EXISTS(allowlist/knowncallers)}" = "0"]', 'nonallowlisted'));
+        $ext->add($id, $c, 'check-contacts', new \ext_gotoif('$["${DB_EXISTS(allowlist/knowncallers)}" = "1"]', 'allowlisted'));
         $ext->add($id, $c, '', new \ext_agi('allowlist-check.agi,"allowlisted"'));
-        $ext->add($id, $c, '', new \ext_gotoif('$["${allowlisted}"="false"]', 'nonallowlisted'));
+        $ext->add($id, $c, '', new \ext_gotoif('$["${allowlisted}"="true"]', 'allowlisted'));
         $ext->add($id, $c, '', new \ext_setvar('CALLED_ALLOWLIST', '1'));
         $ext->add($id, $c, '', new \ext_return(''));
 
-        $ext->add($id, $c, 'nonallowlisted', new \ext_answer(''));
+        $ext->add($id, $c, 'allowlisted', new \ext_answer(''));
         $ext->add($id, $c, '', new \ext_set('ALDEST', '${DB(allowlist/dest)}'));
 
         $ext->add($id, $c, '', new \ext_execif('$["${ALDEST}"=""]', 'Set', 'ALDEST=app-blackhole,hangup,1'));
