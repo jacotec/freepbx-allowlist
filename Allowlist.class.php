@@ -321,7 +321,7 @@ class Allowlist implements BMO
         $ext->add($id, $c, '', new \ext_setvar('CALLED_ALLOWLIST', '1'));
         $ext->add($id, $c, '', new \ext_return(''));
 
-        $ext->add($id, $c, 'allowlisted', new \ext_noop('Caller does not apper on allowlists'));      
+        $ext->add($id, $c, 'allowlisted', new \ext_noop('Caller does appear on allowlists'));      
         $ext->add($id, $c, '', new \ext_set('ALDEST', '${DB(allowlist/dest)}'));
 
         $ext->add($id, $c, '', new \ext_execif('$["${ALDEST}"=""]', 'Set', 'ALDEST=app-blackhole,hangup,1'));

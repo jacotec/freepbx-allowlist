@@ -17,10 +17,10 @@ The original AllowList module was designed to filter all non-allowed calls to an
 
 My fork reverts this logic. AllowListed numbers are now put on the exception route and can be directly directed to the final destination (Extension, queue, ring croup etc.). Unallowed numbers are now further passing the logic which lets them run through Privacy/Superfecta and enables the ability for online Spam detection.
 
-**The official Allowlist module must be uninstalled first. The settings will be preserved.** I've renamed the module to "Allowlist NG" so I can see which version I'm using ;-)
+**The official Allowlist module must be uninstalled AND REMOVED first. The settings will be preserved.** I've renamed the module to "Allowlist NG" so I can see which version I'm using ;-)
 
 ### Installation of Allowlist NG
-* **Uninstall the official Allowlist module first!** Your settings will be preserved and are still working after installation of Allowlist NG
+* **Uninstall and remove(!) the official Allowlist module first!** Your settings will be preserved and are still working after installation of Allowlist NG
 * Download the release .tgz file
 * Install the module in Module Admin with "Upload modules"
 * Enjoy
