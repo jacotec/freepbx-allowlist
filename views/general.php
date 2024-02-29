@@ -9,7 +9,7 @@ if(isset($message)){
 
 ?>
 <div class="container-fluid">
-	<h1><?php echo _('Allowlist Module')?></h1>
+	<h1><?php echo _('Allowlist NG Module')?></h1>
 	<?php echo $infohtml?>
 	<div class = "display full-border">
 		<div class="row">

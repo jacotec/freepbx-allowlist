@@ -1,20 +1,17 @@
 <module>
-	<rawname>allowlist</rawname>
+	<rawname>allowlistng</rawname>
 	<repo>unsupported</repo>
-	<name>Allow List</name>
+	<name>Allow List NG</name>
 	<version>16.0.4</version>
-	<publisher>Sangoma Technologies Corporation</publisher>
+	<publisher>Marco Jakobs</publisher>
 	<license>GPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
 	<category>Admin</category>
 	<description>
-		This module is used to manage a system wide list of allowlisted callers.
+		This module is used to manage a system wide list of allowlisted callers. Fork of the original Allow List module with reverse logic (allowed callers are filtered out, all others continue in the inbound route path)
 	</description>
 	<changelog>
-		*16.0.4* FREEPBX-24162 
-		*16.0.3* FREEPBX-24158 
-		*16.0.2* Fix for splicing into wrong location in dial plan placing it before the blacklist checking
-		*16.0.1* Initial 16.0 release
+		*16.0.4* Initial version based on the Sangoma 16.0.4 original
 	</changelog>
 	<hooks>
 		<bulkhandler class="Bulkhandler" namespace="FreePBX\modules">
@@ -29,7 +26,7 @@
 		<module>cdr</module>
 	</depends>
 	<menuitems>
-		<allowlist needsenginedb="yes">Allowlist</allowlist>
+		<allowlist needsenginedb="yes">Allowlist NG</allowlist>
 	</menuitems>
  	<supported>
  		<version>16.0</version>
