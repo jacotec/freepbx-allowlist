@@ -17,6 +17,18 @@ The original AllowList module was designed to filter all non-allowed calls to an
 
 My fork reverts this logic. AllowListed numbers are now put on the exception route and can be directly directed to the final destination (Extension, queue, ring croup etc.). Unallowed numbers are now further passing the logic which lets them run through Privacy/Superfecta and enables the ability for online Spam detection.
 
+**The official Allowlist module must be uninstalled first. The settings will be preserved.** I've renamed the module to "Allowlist NG" so I can see which version I'm using ;-)
+
+### Installation of Allowlist NG
+* **Uninstall the official Allowlist module first!** Your settings will be preserved and are still working after installation of Allowlist NG
+* Download the release .tgz file
+* Install the module in Module Admin with "Upload modules"
+* Enjoy
+
+The module is not signed, so you'll see a warning that you're running an unsigned module.
+**I have no plans to sign this module at this point** as I've created it for my own use. I simply want to share it to all who might have the same problems with the original behavior.
+
+
 ### Setting up a FreePBX system
 [See our WIKI](http://wiki.freepbx.org/display/FOP/Install+FreePBX)
 ### License
