@@ -12,11 +12,6 @@ allowlist
 This is a module for [FreePBX©](http://www.freepbx.org/ "FreePBX Home Page"). [FreePBX](http://www.freepbx.org/ "FreePBX Home Page") is an open source GUI (graphical user interface) that controls and manages [Asterisk©](http://www.asterisk.org/ "Asterisk Home Page") (PBX). FreePBX is licensed under GPL.
 [FreePBX](http://www.freepbx.org/ "FreePBX Home Page") is a completely modular GUI for Asterisk written in PHP and Javascript. Meaning you can easily write any module you can think of and distribute it free of cost to your clients so that they can take advantage of beneficial features in [Asterisk](http://www.asterisk.org/ "Asterisk Home Page")
 
-### This fork
-The original AllowList module was designed to filter all non-allowed calls to an exception route. This is in my opinion not the right way as these unknown numbers can't pass Privacy and/or Superfecta (i.e. for spam detection). The well-known allowed numbers did pass the route and Privacy/Superfecta which is not needed at all for already known friendly numbers.
-
-My fork reverts this logic. AllowListed numbers are now put on the exception route and can be directly directed to the final destination (Extension, queue, ring croup etc.). Unallowed numbers are now further passing the logic which lets them run through Privacy/Superfecta and enables the ability for online Spam detection.
-
 ### Setting up a FreePBX system
 [See our WIKI](http://wiki.freepbx.org/display/FOP/Install+FreePBX)
 ### License
