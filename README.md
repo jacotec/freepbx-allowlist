@@ -15,18 +15,16 @@ This is a module for [FreePBX©](http://www.freepbx.org/ "FreePBX Home Page"). [
 ### This fork
 The original AllowList module was designed to filter all non-allowed calls to an exception route. This is in my opinion not the right way as these unknown numbers can't pass Privacy and/or Superfecta (i.e. for spam detection). The well-known allowed numbers did pass the route and Privacy/Superfecta which is not needed at all for already known friendly numbers.
 
-My fork reverts this logic. AllowListed numbers are now put on the exception route and can be directly directed to the final destination (Extension, queue, ring croup etc.). Unallowed numbers are now further passing the logic which lets them run through Privacy/Superfecta and enables the ability for online Spam detection.
+My fork adds a switch to reverse this logic, so you can now send AllowListed numbers to the configured destination (Extension, queue, ring croup etc.). Unallowed numbers are in this case further passing the inbound route which lets them run through Privacy/Superfecta and enables the ability for online Spam detection.
 
-**The official Allowlist module must be uninstalled AND REMOVED first. The settings will be preserved.** I've renamed the module to "Allowlist NG" so I can see which version I'm using ;-)
 
 ### Installation of Allowlist NG
-* **Uninstall and remove(!) the official Allowlist module first!** Your settings will be preserved and are still working after installation of Allowlist NG
 * Download the release .tgz file
 * Install the module in Module Admin with "Upload modules"
 * Enjoy
 
 The module is not signed, so you'll see a warning that you're running an unsigned module.
-**I have no plans to sign this module at this point** as I've created it for my own use. I simply want to share it to all who might have the same problems with the original behavior.
+**I have no plans to sign this module at this point** as I've created it for my own use. I'll try to make a PR to Sangoma.
 
 
 ### Setting up a FreePBX system
