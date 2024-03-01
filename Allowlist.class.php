@@ -123,7 +123,8 @@ class Allowlist implements BMO
                             $array_continue = array(
                                 'dest',
                                 'pause',
-                                'knowncallers'
+                                'knowncallers',
+                                'reverse'
                             );
                             if ( in_array($number, $array_continue) || substr($number, 0, 7) == 'autoadd' || substr($number, 0, 3) == 'did')
                             {
@@ -206,6 +207,7 @@ class Allowlist implements BMO
                     $this->destinationSet($destination);
                     $this->pauseSet($request['pause']);
                     $this->allowknowncallersSet($request['knowncallers']);
+                    $this->reverseSet($request['reverse']);
                 break;
                 case 'import':
                     if ($_FILES['file']['error'] > 0)
@@ -313,15 +315,30 @@ class Allowlist implements BMO
         $ext->add($id, $c, '', new \ext_gosub('app-allowlist-pause-check,s,1'));
 	    $ext->add($id, $c, '', new \ext_gotoif('$["${DB_EXISTS(allowlist/pause)}"="1"]', 'returnto'));
 
-        $ext->add($id, $c, 'check-list', new \ext_gotoif('$["${DB_EXISTS(allowlist/${CALLERID(num)})}"="0"]', 'check-contacts', 'allowlisted'));
+		// check for inverse logic (send allowed callers to allwolist-destination)
+	    $ext->add($id, $c, 'check-reverse', new \ext_gotoif('$["${DB_EXISTS(allowlist/reverse)}"="1"]', 'check-list-inv'));
 
-        $ext->add($id, $c, 'check-contacts', new \ext_gotoif('$["${DB_EXISTS(allowlist/knowncallers)}" = "1"]', 'allowlisted'));
+		// 'Normal' logic - allowlisted calls will continue the inbound route, non-allowlisted will go to the configured destination
+        $ext->add($id, $c, 'check-list', new \ext_gotoif('$["${DB_EXISTS(allowlist/${CALLERID(num)})}"="0"]', 'check-contacts', 'continue'));
+
+        $ext->add($id, $c, 'check-contacts', new \ext_gotoif('$["${DB_EXISTS(allowlist/knowncallers)}" == "0"]', 'reroute'));
         $ext->add($id, $c, '', new \ext_agi('allowlist-check.agi,"allowlisted"'));
-        $ext->add($id, $c, '', new \ext_gotoif('$["${allowlisted}"="true"]', 'allowlisted'));
+        $ext->add($id, $c, '', new \ext_gotoif('$["${allowlisted}"="false"]', 'reroute', 'continue'));
+
+		// 'Reverse' logic - allowlisted calls will go to the configured destination, non-allowlisted will continue the inbound route
+        $ext->add($id, $c, 'check-list-inv', new \ext_gotoif('$["${DB_EXISTS(allowlist/${CALLERID(num)})}"="0"]', 'check-contacts-inv', 'reroute'));
+
+        $ext->add($id, $c, 'check-contacts-inv', new \ext_gotoif('$["${DB_EXISTS(allowlist/knowncallers)}" = "0"]', 'continue'));
+        $ext->add($id, $c, '', new \ext_agi('allowlist-check.agi,"allowlisted"'));
+        $ext->add($id, $c, '', new \ext_gotoif('$["${allowlisted}"="false"]', 'continue', 'reroute'));
+
+		// Continue the inbound route
+        $ext->add($id, $c, 'continue', new \ext_noop('Continue inbound route'));      
         $ext->add($id, $c, '', new \ext_setvar('CALLED_ALLOWLIST', '1'));
         $ext->add($id, $c, '', new \ext_return(''));
 
-        $ext->add($id, $c, 'allowlisted', new \ext_noop('Caller does appear on allowlists'));      
+		// Send call to configured destination
+        $ext->add($id, $c, 'reroute', new \ext_noop('Send call to new destination'));      
         $ext->add($id, $c, '', new \ext_set('ALDEST', '${DB(allowlist/dest)}'));
 
         $ext->add($id, $c, '', new \ext_execif('$["${ALDEST}"=""]', 'Set', 'ALDEST=app-blackhole,hangup,1'));
@@ -548,6 +565,7 @@ class Allowlist implements BMO
         $destination = $this->destinationGet();
         $filter_knowncallers = $this->allowknowncallersGet() == 1;
         $pause = $this->pauseGet() != 0;
+        $reverse = $this->reverseGet() == 1;
         $view = isset($_REQUEST['view']) ? $_REQUEST['view'] : '';
         switch ($view)
         {
@@ -560,7 +578,8 @@ class Allowlist implements BMO
                     'allowlist' => $allowlistitems,
                     'destination' => $destination,
                     'filter_knowncallers' => $filter_knowncallers,
-                    'pause' => $pause
+                    'pause' => $pause,
+                    'reverse' => $reverse
                 ));
         }
     }
@@ -580,7 +599,8 @@ class Allowlist implements BMO
                 $array_continue = array(
                     '/allowlist/dest',
                     '/allowlist/pause',
-                    '/allowlist/knowncallers'
+                    '/allowlist/knowncallers',
+                    '/allowlist/reverse'
                 );
                 if (in_array($k, $array_continue) || substr($k, 0, 18) == '/allowlist/autoadd' || substr($k, 0, 14) == '/allowlist/did')
                 {
@@ -732,6 +752,45 @@ class Allowlist implements BMO
         else
         {
             throw new RuntimeException(_('Cannot connect to Asterisk Manager, is Asterisk running?'));
+        }
+    }
+
+
+    /**
+     * Whether to reverse the logic (send allowed callers to the destination)
+     * @param  boolean $reverse True to reverse, false otherwise
+     */
+    public function reverseSet($reverse)
+    {
+        if ($this->astman->connected())
+        {
+            // Remove filtering for knowncallers cid
+            $this->astman->database_del('allowlist', 'reverse');
+            // Add it back if it's checked
+            if (!empty($reverse))
+            {
+                $this->astman->database_put('allowlist', 'reverse', '1');
+            }
+        }
+        else
+        {
+            throw new RuntimeException(_('Cannot connect to Asterisk Manager, is Asterisk running?'));
+        }
+    }
+
+    /**
+     * Get status of reverse flag
+     * @return string 1 if reverse, 0 otherwise
+     */
+    public function reverseGet()
+    {
+        if ($this->astman->connected())
+        {
+            return $this->astman->database_get('allowlist', 'reverse');
+        }
+        else
+        {
+            throw new RuntimeException('Cannot connect to Asterisk Manager, is Asterisk running?');
         }
     }
 

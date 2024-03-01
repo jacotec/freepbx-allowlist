@@ -148,7 +148,7 @@ class Allowlist extends Command {
 		}
 
 		if($input->getOption('settings')) {
-			$optionids = array(1 => 'allow', 2 => 'pause');
+			$optionids = array(1 => 'allow', 2 => 'pause', 3 => 'reverse');
 			$output->writeln(_('Choose a setting to enable/disable'));
 			$helper = $this->getHelper('question');
 			$question = new ChoiceQuestion($this->displaySettings($allowlist, $output)->render(),$optionids,-1);
@@ -266,6 +266,10 @@ class Allowlist extends Command {
 			_('pause allowlist processing'),
 			$allowlist->pauseGet() == 0 ? _('No') : _('Yes')
 		);
+		$rows[] = array(
+			_('reverse logic - send allowed callers to destination'),
+			$allowlist->reverseGet() == 0 ? _('No') : _('Yes')
+		);
 		$table->setRows($rows);
 		return $table;
 	}	
@@ -343,6 +347,9 @@ class Allowlist extends Command {
 		switch($option) {
 		case 'pause':
 			$allowlist->pauseSet( !$allowlist->pauseGet() );
+			break;
+		case 'reverse':
+			$allowlist->reverseSet( !$allowlist->reverseGet() );
 			break;
 		case 'allow':
 			$allowlist->allowknowncallersSet( !$allowlist->allowknowncallersGet() );

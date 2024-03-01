@@ -9,7 +9,7 @@ if(isset($message)){
 
 ?>
 <div class="container-fluid">
-	<h1><?php echo _('Allowlist NG Module')?></h1>
+	<h1><?php echo _('Allowlist Module')?></h1>
 	<?php echo $infohtml?>
 	<div class = "display full-border">
 		<div class="row">
@@ -99,6 +99,33 @@ if(isset($message)){
 											</div>
 										</div>
 										<!--End enable/disable global pause flag-->
+										<!--enable/disable global reverse flag-->
+										<div class="element-container">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-4">
+																<b><?php echo _("Reverse logic") ?></b>
+																<i class="fa fa-question-circle fpbx-help-icon" data-for="reverse"></i>
+															</div>
+															<div class="col-md-8 radioset">
+																<input type="radio" name="reverse" id="reverseyes" value="1" <?php echo ($reverse === true?"CHECKED":"") ?>>
+																<label for="reverseyes"><?php echo _("Yes");?></label>
+																<input type="radio" name="reverse" id="reverseno" value="" <?php echo ($reverse === true?"":"CHECKED") ?>>
+																<label for="reverseno"><?php echo _("No");?></label>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<span id="reverse-help" class="help-block fpbx-help-block"><?php echo _("Sends allowed numbers to the destination below if active (instead of sending non-allowed)")?></span>
+												</div>
+											</div>
+										</div>
+										<!--End enable/disable global reverse flag-->
 										<!--Destination-->
 										<div class="element-container">
 											<div class="row">
@@ -106,7 +133,7 @@ if(isset($message)){
 													<div class="row">
 														<div class="form-group">
 															<div class="col-md-4">
-																<label class="control-label" for="goto0"><?php echo _("Destination for AllowListed Calls") ?></label>
+																<label class="control-label" for="goto0"><?php echo _("Destination for non-AllowListed (or AllowListed if 'reverse' is on) Calls") ?></label>
 																<i class="fa fa-question-circle fpbx-help-icon" data-for="goto0"></i>
 															</div>
 															<div class="col-md-8 radioset">
@@ -118,7 +145,7 @@ if(isset($message)){
 											</div>
 											<div class="row">
 												<div class="col-md-12">
-													<span id="goto0-help" class="help-block fpbx-help-block"><?php echo _("Choose where allowlisted calls go")?></span>
+													<span id="goto0-help" class="help-block fpbx-help-block"><?php echo _("Choose where non-allowlisted (or allowlisted if 'reverse' is on) calls go")?></span>
 												</div>
 											</div>
 										</div>

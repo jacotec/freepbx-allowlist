@@ -1,8 +1,8 @@
 <module>
 	<rawname>allowlist</rawname>
 	<repo>unsupported</repo>
-	<name>Allow List NG</name>
-	<version>16.0.4</version>
+	<name>Allow List</name>
+	<version>16.90.4</version>
 	<publisher>Marco Jakobs</publisher>
 	<license>GPLv3+</license>
 	<licenselink>http://www.gnu.org/licenses/gpl-3.0.txt</licenselink>
@@ -11,7 +11,7 @@
 		This module is used to manage a system wide list of allowlisted callers. Fork of the original Allow List module with reverse logic (allowed callers are filtered out, all others continue in the inbound route path)
 	</description>
 	<changelog>
-		*16.0.4* Initial version based on the Sangoma 16.0.4 original
+		*16.90.4* Initial version based on the Sangoma 16.0.4 original
 	</changelog>
 	<hooks>
 		<bulkhandler class="Bulkhandler" namespace="FreePBX\modules">
@@ -26,7 +26,7 @@
 		<module>cdr</module>
 	</depends>
 	<menuitems>
-		<allowlist needsenginedb="yes">Allowlist NG</allowlist>
+		<allowlist needsenginedb="yes">Allowlist</allowlist>
 	</menuitems>
  	<supported>
  		<version>16.0</version>
